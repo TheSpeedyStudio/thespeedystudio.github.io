@@ -1,26 +1,55 @@
 const email = document.getElementById("email");
+const password = document.getElementById("password");
+const toggle = document.getElementById("toggle");
 const error = document.getElementById("error");
 const button = document.querySelector(".continue");
+const spinner = document.querySelector(".spinner");
+const text = document.querySelector(".btn-text");
 
-email.addEventListener("input", () => {
-  if (!email.value.includes("@")) {
-    error.textContent = "Please enter a valid email address";
-    button.disabled = true;
+/* SHOW / HIDE PASSWORD */
+toggle.onclick = () => {
+  if (password.type === "password") {
+    password.type = "text";
+    toggle.textContent = "Hide";
   } else {
-    error.textContent = "";
-    button.disabled = false;
+    password.type = "password";
+    toggle.textContent = "Show";
   }
-});
+};
 
-document.getElementById("loginForm").addEventListener("submit", (e) => {
+/* VALIDATION */
+function validate() {
+  if (!email.value.includes("@")) {
+    error.textContent = "Enter a valid email";
+    button.disabled = true;
+    return;
+  }
+
+  if (password.value.length < 6) {
+    error.textContent = "Password must be at least 6 characters";
+    button.disabled = true;
+    return;
+  }
+
+  error.textContent = "";
+  button.disabled = false;
+}
+
+email.oninput = validate;
+password.oninput = validate;
+
+/* SUBMIT */
+document.getElementById("loginForm").onsubmit = e => {
   e.preventDefault();
 
-  button.textContent = "Checking...";
+  text.textContent = "Checking...";
+  spinner.style.display = "block";
   button.disabled = true;
 
   setTimeout(() => {
-    button.textContent = "Continue";
-    error.textContent = "Login system not connected yet";
+    spinner.style.display = "none";
+    text.textContent = "Continue";
+    error.textContent = "Auth not connected yet";
     button.disabled = false;
   }, 1500);
-});
+};
